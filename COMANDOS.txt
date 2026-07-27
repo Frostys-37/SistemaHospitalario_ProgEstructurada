@@ -1,0 +1,9 @@
+LES DEJO AQUI LOS COMANDOS PARA QUE HAGAN SUS PRUEBAS (PUEDEN HACER UN MAIN TEMPORAL SOLO PARA USTEDES)
+SI HACEN EL MAIN PARA PROBAR, BORRARLO ANTES DE SUBIR A GITHUB
+
+PD: CADA QUE QUIERAN COMPILAR/EJECUTAR EL PROGRAMA, DEBERAN BORRAR LA CARPETA -p Y build Y VOLVER A EJECUTAR LOS COMANDOS
+
+Comando	            Acción
+mingw32-make	    Compila todos los archivos .cpp de src/ y genera el ejecutable build/sistema.exe.
+mingw32-make run	Compila el proyecto (si hay cambios) y ejecuta automáticamente el programa build/sistema.exe.
+mingw32-make clean	Elimina la carpeta build/ y los ejecutables generados para permitir una compilación limpia desde cero.

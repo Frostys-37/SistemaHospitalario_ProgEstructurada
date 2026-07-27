@@ -1,85 +1,88 @@
 #ifndef ESTRUCTURAS_H
 #define ESTRUCTURAS_H
 
-// Constantes generales
-const int MAX_PACIENTES = 200;
-const int MAX_MEDICOS = 20;
-const int MAX_ESPECIALIDADES = 3;
-const int MAX_CITAS = 50;
-const int MAX_CONSULTAS = 50;
-const int MAX_FACTURAS = 50;
+#include <string>
+using namespace std;
 
-// Tutor legal (solo aplica si el paciente es menor de 18)
+// ---- Constantes generales ----
+const int MAX_PACIENTES      = 200;
+const int MAX_MEDICOS        = 50;
+const int MAX_ESPECIALIDADES = 20;
+const int MAX_CITAS          = 500;
+const int MAX_CONSULTAS      = 500;
+const int MAX_FACTURAS       = 500;
+
+// ---- Tutor legal (solo aplica si el paciente es menor de 18) ----
 struct Tutor {
-    char nombre[60];
-    char identidad[14];   // 13 digitos + '\0'
-    int  edad;
-    char parentesco[20];
-    char celular[15];
-    bool tieneTutor;      // false si el paciente es mayor de edad
+    string nombre;
+    string identidad;    // 13 digitos
+    int    edad;
+    string parentesco;
+    string celular;
+    bool   tieneTutor;   // false si el paciente es mayor de edad
 };
 
-//Paciente
+// ---- Paciente ----
 struct Paciente {
-    char  codigo[10];     // Ej: "P-0001"
-    char  nombre[60];
-    char  identidad[14];  // 13 digitos + '\0'
-    int   edad;
-    char  genero;         // 'M' o 'F'
-    float altura;         // metros
-    float peso;           // kg
-    char  celular[15];
-    char  correo[50];
-    char  notas[100];
-    Tutor tutor;
-    bool  activo;         // eliminacion logica
-    char  razonBaja[100]; // motivo si activo == false
+    string codigo;        // Ej: "P-0001"
+    string nombre;
+    string identidad;     // 13 digitos
+    int    edad;
+    char   genero;        // 'M' o 'F'
+    float  altura;        // metros
+    float  peso;          // kg
+    string celular;
+    string correo;
+    string notas;
+    Tutor  tutor;
+    bool   activo;        // eliminacion logica
+    string razonBaja;     // motivo si activo == false
 };
 
-// Especialidad
+// ---- Especialidad (catalogo, la maneja el modulo de Medico) ----
 struct Especialidad {
-    char codigo[5]; //ej: "E-01"
-    char nombre[40];
+    string codigo;   // 3 digitos, ej "010"
+    string nombre;
 };
 
 // ---- Medico ----
 struct Medico {
-    char codigo[12];          // codigo de trabajador, ej "M-0001"
-    char nombre[60];
-    char identidad[14];
-    int  edad;
-    char genero;
-    char celular[15];
-    char correo[50];
-    char codEspecialidad[5];  // FK -> Especialidad.codigo
-    char notas[100];
-    bool activo;
+    string codigo;          // codigo de trabajador, ej "M-0001"
+    string nombre;
+    string identidad;
+    int    edad;
+    char   genero;
+    string celular;
+    string correo;
+    string codEspecialidad; // FK -> Especialidad.codigo
+    string notas;
+    bool   activo;
 };
- 
+
 // ---- Cita ----
 struct Cita {
-    char codigo[10];          // "C-0001"
-    char codigoPaciente[10];  // FK -> Paciente.codigo
-    char codigoMedico[12];    // FK -> Medico.codigo
-    char fecha[11];           // "dd/mm/aaaa"
-    char hora[6];              // "hh:mm"
-    char estado[15];           // "activa" | "cancelada" | "reprogramada"
-    char motivo[100];          // razon si fue cancelada
+    string codigo;          // "C-0001"
+    string codigoPaciente;  // FK -> Paciente.codigo
+    string codigoMedico;    // FK -> Medico.codigo
+    string fecha;           // "dd/mm/aaaa"
+    string hora;            // "hh:mm"
+    string estado;          // "activa" | "cancelada" | "reprogramada"
+    string motivo;          // razon si fue cancelada
 };
- 
+
 // ---- Consulta ----
 struct Consulta {
-    char codigo[10];          // "CO-0001"
-    char codigoCita[10];      // FK -> Cita.codigo
-    char diagnostico[150];
-    char tratamiento[150];
+    string codigo;          // "CO-0001"
+    string codigoCita;      // FK -> Cita.codigo
+    string diagnostico;
+    string tratamiento;
 };
- 
+
 // ---- Factura ----
 struct Factura {
-    char codigo[12];          // "F-C0001"
-    char codigoCita[10];      // FK -> Cita.codigo
-    float total;
+    string codigo;          // "F-C0001"
+    string codigoCita;      // FK -> Cita.codigo
+    float  total;
 };
- 
+
 #endif
