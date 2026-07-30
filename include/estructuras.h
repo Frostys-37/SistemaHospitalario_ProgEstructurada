@@ -57,6 +57,8 @@ struct Medico {
     string codEspecialidad; // FK -> Especialidad.codigo
     string notas;
     bool   activo;
+    string horario;         // "matutina" | "vespertina" | "completa"
+    string horarioDisponible;
 };
 
 // ---- Cita ----
