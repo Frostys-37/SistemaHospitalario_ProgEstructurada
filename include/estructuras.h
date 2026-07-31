@@ -65,6 +65,7 @@ struct Medico {
 struct Cita {
     string codigo;          // "C-0001"
     string codigoPaciente;  // FK -> Paciente.codigo
+    string identidadPaciente; //"Agrego campo identidadPaciente a struct Cita".
     string codigoMedico;    // FK -> Medico.codigo
     string fecha;           // "dd/mm/aaaa"
     string hora;            // "hh:mm"
