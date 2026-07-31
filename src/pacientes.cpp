@@ -110,6 +110,16 @@ int buscarPacienteID(Paciente lista[], int total, string identidad) {
     return -1; // Paciente no encontrado
 }
 
+// Busca por codigo (ej "P-0001") en vez de identidad.
+int buscarPacienteXCodigo(Paciente lista[], int total, string codigo) {
+    for(int i = 0; i < total; i++) {
+        if(lista[i].codigo == codigo) {
+            return i;
+        }
+    }
+    return -1; // Paciente no encontrado
+}
+
 // =========================================================
 //  MOSTRAR PACIENTE
 // =========================================================
@@ -376,4 +386,4 @@ void menuPacientes(Paciente lista[], int &total) {
                 cout << "Opcion invalida. Intente nuevamente." << endl;
         }
     } while(opcion != 0);
-} 
+}

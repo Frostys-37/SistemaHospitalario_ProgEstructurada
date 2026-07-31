@@ -13,6 +13,7 @@ void guardarPacientes(Paciente lista[], int total);
 
 // Busqueda de pacientes
 int buscarPacienteID(Paciente lista[], int total, string identidad);
+int buscarPacienteXCodigo(Paciente lista[], int total, string codigo);
 
 // Funciones principales
 void registrarPaciente(Paciente lista[], int &total);
