@@ -1,39 +1,36 @@
 #ifndef CITA_H
 #define CITA_H
 
-// Tamano maximo del arreglo de citas y nombre del archivo de datos
-const int MAX_CITAS = 200;
-const char ARCHIVO_CITAS[] = "citas.txt";
+#include <string>
+#include "estructuras.h"
+#include "config.h"
+using namespace std;
 
-// Datos de una cita: codigo|codPaciente|codMedico|fechaHora|estado
-struct Cita {
-    char codigo[10];
-    char codPaciente[10];
-    char codMedico[10];
-    char fechaHora[20];
-    char estado[15];       // "activa" | "cancelada" | "reprogramada"
-};
-
-// Carga y guarda el archivo citas.txt
+// Carga y guarda el archivo de citas (ruta en config.h)
 bool cargarCitas(Cita citas[], int &totalCitas);
 bool guardarCitas(Cita citas[], int totalCitas);
 
-// Menu principal del submodulo
-void submenuCitas(Cita citas[], int &totalCitas);
+// Menu principal del submodulo. Recibe tambien Paciente y Medico
+// porque agendarCita necesita validar contra esos arreglos.
+void menuCitas(Cita citas[], int &totalCitas,
+               Paciente listaPacientes[], int totalPacientes,
+               Medico listaMedicos[], int totalMedicos);
 
 // Las 4 operaciones principales del modulo
-void agendarCita(Cita citas[], int &totalCitas);
+void agendarCita(Cita citas[], int &totalCitas,
+                  Paciente listaPacientes[], int totalPacientes,
+                  Medico listaMedicos[], int totalMedicos);
 void cancelarCita(Cita citas[], int totalCitas);
 void reprogramarCita(Cita citas[], int totalCitas);
 bool validarChoqueHorario(Cita citas[], int totalCitas,
-                           const char* codMedico, const char* fechaHora,
-                           const char* codigoAExcluir = "");
+                           string codigoMedico, string fecha, string hora,
+                           string codigoAExcluir = "");
 
 // Funciones de apoyo
-int buscarCitaPorCodigo(Cita citas[], int totalCitas, const char* codigo);
-void generarCodigoCita(Cita citas[], int totalCitas, char* codigoNuevo);
+int buscarCitaPorCodigo(Cita citas[], int totalCitas, string codigo);
+string generarCodigoCita(Cita citas[], int totalCitas);
 void mostrarCita(const Cita &c);
-void listarCitasPorPaciente(Cita citas[], int totalCitas, const char* codPaciente);
-void listarCitasPorMedico(Cita citas[], int totalCitas, const char* codMedico);
+void listarCitasPorPaciente(Cita citas[], int totalCitas, string codigoPaciente);
+void listarCitasPorMedico(Cita citas[], int totalCitas, string codigoMedico);
 
 #endif
