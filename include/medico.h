@@ -24,5 +24,5 @@ void listarEspecialidades(Especialidad lista[], int total);
 void verHorarioDisponible(Medico lista[], int total);
 
 // SubMenu
-void menuMedico(Medico lista[], int &total, Especialidad especialidades[], int &totalEspecialidades);
+void menuMedicos(Medico lista[], int &total, Especialidad especialidades[], int &totalEspecialidades);
 #endif // MEDICO_H
