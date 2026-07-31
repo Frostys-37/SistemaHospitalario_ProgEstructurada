@@ -181,7 +181,7 @@ void agendarCita(Cita citas[], int &totalCitas,
     do {
         cout << "Codigo de medico: ";
         cin >> codigoMedico;
-        idxMedico = buscarMedicoPorCodigo(listaMedicos, totalMedicos, codigoMedico);
+        idxMedico = buscarMedicoXCodigo(listaMedicos, totalMedicos, codigoMedico);
         if (idxMedico == -1) {
             cout << "Ese medico no existe. Intente de nuevo.\n";
         }
