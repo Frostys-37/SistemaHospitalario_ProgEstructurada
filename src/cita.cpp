@@ -1,17 +1,16 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
-#include <cstdio>
+#include <sstream>
+#include <iomanip>
 #include "cita.h"
-
-bool existePaciente(const char* codigo);
-bool existeMedico(const char* codigo);
+#include "paciente.h"
+#include "medico.h"
 
 using namespace std;
 
-// Lee citas.txt y llena el arreglo en memoria
+// Lee el archivo de citas y llena el arreglo en memoria
 bool cargarCitas(Cita citas[], int &totalCitas) {
-    ifstream archivo(ARCHIVO_CITAS);
+    ifstream archivo(RUTA_CITAS);
     totalCitas = 0;
 
     if (!archivo.is_open()) {
@@ -22,23 +21,17 @@ bool cargarCitas(Cita citas[], int &totalCitas) {
     while (getline(archivo, linea) && totalCitas < MAX_CITAS) {
         if (linea.empty()) continue;
 
-        char buffer[200];
-        strcpy(buffer, linea.c_str());
+        stringstream ss(linea);
+        string campo;
 
-        char* token = strtok(buffer, "|");
-        if (token) strcpy(citas[totalCitas].codigo, token);
-
-        token = strtok(NULL, "|");
-        if (token) strcpy(citas[totalCitas].codPaciente, token);
-
-        token = strtok(NULL, "|");
-        if (token) strcpy(citas[totalCitas].codMedico, token);
-
-        token = strtok(NULL, "|");
-        if (token) strcpy(citas[totalCitas].fechaHora, token);
-
-        token = strtok(NULL, "|");
-        if (token) strcpy(citas[totalCitas].estado, token);
+        getline(ss, campo, '|'); citas[totalCitas].codigo = campo;
+        getline(ss, campo, '|'); citas[totalCitas].codigoPaciente = campo;
+        getline(ss, campo, '|'); citas[totalCitas].identidadPaciente = campo;
+        getline(ss, campo, '|'); citas[totalCitas].codigoMedico = campo;
+        getline(ss, campo, '|'); citas[totalCitas].fecha = campo;
+        getline(ss, campo, '|'); citas[totalCitas].hora = campo;
+        getline(ss, campo, '|'); citas[totalCitas].estado = campo;
+        getline(ss, campo, '|'); citas[totalCitas].motivo = campo;
 
         totalCitas++;
     }
@@ -47,20 +40,23 @@ bool cargarCitas(Cita citas[], int &totalCitas) {
     return true;
 }
 
-// Reescribe citas.txt completo con lo que hay en memoria
+// Reescribe el archivo de citas completo con lo que hay en memoria
 bool guardarCitas(Cita citas[], int totalCitas) {
-    ofstream archivo(ARCHIVO_CITAS);
+    ofstream archivo(RUTA_CITAS);
     if (!archivo.is_open()) {
-        cout << "Error: no se pudo abrir " << ARCHIVO_CITAS << " para escribir.\n";
+        cout << "Error: no se pudo abrir " << RUTA_CITAS << " para escribir.\n";
         return false;
     }
 
     for (int i = 0; i < totalCitas; i++) {
         archivo << citas[i].codigo << "|"
-                << citas[i].codPaciente << "|"
-                << citas[i].codMedico << "|"
-                << citas[i].fechaHora << "|"
-                << citas[i].estado << "\n";
+                << citas[i].codigoPaciente << "|"
+                << citas[i].identidadPaciente << "|"
+                << citas[i].codigoMedico << "|"
+                << citas[i].fecha << "|"
+                << citas[i].hora << "|"
+                << citas[i].estado << "|"
+                << citas[i].motivo << "\n";
     }
 
     archivo.close();
@@ -68,45 +64,51 @@ bool guardarCitas(Cita citas[], int totalCitas) {
 }
 
 // Devuelve el indice de la cita con ese codigo, o -1 si no existe
-int buscarCitaPorCodigo(Cita citas[], int totalCitas, const char* codigo) {
+int buscarCitaPorCodigo(Cita citas[], int totalCitas, string codigo) {
     for (int i = 0; i < totalCitas; i++) {
-        if (strcmp(citas[i].codigo, codigo) == 0) {
+        if (citas[i].codigo == codigo) {
             return i;
         }
     }
     return -1;
 }
 
-// Genera el siguiente codigo consecutivo tipo C-001, C-002...
-void generarCodigoCita(Cita citas[], int totalCitas, char* codigoNuevo) {
+// Genera el siguiente codigo consecutivo tipo C-0001, C-0002...
+string generarCodigoCita(Cita citas[], int totalCitas) {
     int maxNumero = 0;
 
     for (int i = 0; i < totalCitas; i++) {
-        int numero = atoi(citas[i].codigo + 2);
+        int numero = stoi(citas[i].codigo.substr(2));
         if (numero > maxNumero) {
             maxNumero = numero;
         }
     }
 
-    sprintf(codigoNuevo, "C-%03d", maxNumero + 1);
+    ostringstream oss;
+    oss << "C-" << setfill('0') << setw(4) << (maxNumero + 1);
+    return oss.str();
 }
 
 // Imprime los datos de una cita
 void mostrarCita(const Cita &c) {
     cout << "----------------------------------------\n";
     cout << "Codigo cita   : " << c.codigo << "\n";
-    cout << "Paciente      : " << c.codPaciente << "\n";
-    cout << "Medico        : " << c.codMedico << "\n";
-    cout << "Fecha/Hora    : " << c.fechaHora << "\n";
+    cout << "Paciente      : " << c.codigoPaciente << " (ID: " << c.identidadPaciente << ")\n";
+    cout << "Medico        : " << c.codigoMedico << "\n";
+    cout << "Fecha         : " << c.fecha << "\n";
+    cout << "Hora          : " << c.hora << "\n";
     cout << "Estado        : " << c.estado << "\n";
+    if (!c.motivo.empty()) {
+        cout << "Motivo        : " << c.motivo << "\n";
+    }
     cout << "----------------------------------------\n";
 }
 
-// Muestra todas las citas de un paciente
-void listarCitasPorPaciente(Cita citas[], int totalCitas, const char* codPaciente) {
+// Muestra todas las citas de un paciente (por codigo)
+void listarCitasPorPaciente(Cita citas[], int totalCitas, string codigoPaciente) {
     bool encontro = false;
     for (int i = 0; i < totalCitas; i++) {
-        if (strcmp(citas[i].codPaciente, codPaciente) == 0) {
+        if (citas[i].codigoPaciente == codigoPaciente) {
             mostrarCita(citas[i]);
             encontro = true;
         }
@@ -117,10 +119,10 @@ void listarCitasPorPaciente(Cita citas[], int totalCitas, const char* codPacient
 }
 
 // Muestra todas las citas de un medico
-void listarCitasPorMedico(Cita citas[], int totalCitas, const char* codMedico) {
+void listarCitasPorMedico(Cita citas[], int totalCitas, string codigoMedico) {
     bool encontro = false;
     for (int i = 0; i < totalCitas; i++) {
-        if (strcmp(citas[i].codMedico, codMedico) == 0) {
+        if (citas[i].codigoMedico == codigoMedico) {
             mostrarCita(citas[i]);
             encontro = true;
         }
@@ -130,78 +132,86 @@ void listarCitasPorMedico(Cita citas[], int totalCitas, const char* codMedico) {
     }
 }
 
-// Revisa si el medico ya tiene otra cita activa en esa misma fecha/hora
+// Revisa si el medico ya tiene otra cita activa en esa misma fecha y hora
 bool validarChoqueHorario(Cita citas[], int totalCitas,
-                           const char* codMedico, const char* fechaHora,
-                           const char* codigoAExcluir) {
+                           string codigoMedico, string fecha, string hora,
+                           string codigoAExcluir) {
     for (int i = 0; i < totalCitas; i++) {
-        if (strcmp(citas[i].codigo, codigoAExcluir) == 0) {
+        if (citas[i].codigo == codigoAExcluir) {
             continue; // no comparar la cita contra si misma
         }
-        if (strcmp(citas[i].estado, "activa") != 0) {
+        if (citas[i].estado != "activa") {
             continue; // canceladas no generan choque
         }
-        if (strcmp(citas[i].codMedico, codMedico) == 0 &&
-            strcmp(citas[i].fechaHora, fechaHora) == 0) {
+        if (citas[i].codigoMedico == codigoMedico &&
+            citas[i].fecha == fecha && citas[i].hora == hora) {
             return true;
         }
     }
     return false;
 }
 
-// Pide paciente, medico y fecha/hora validos, y registra la cita
-void agendarCita(Cita citas[], int &totalCitas) {
+// Pide identidad de paciente (valida contra el arreglo real de Paciente),
+// codigo de medico (valida contra el arreglo real de Medico), fecha y hora,
+// y registra la cita guardando tanto codigo como identidad del paciente.
+void agendarCita(Cita citas[], int &totalCitas,
+                  Paciente listaPacientes[], int totalPacientes,
+                  Medico listaMedicos[], int totalMedicos) {
     if (totalCitas >= MAX_CITAS) {
         cout << "No se pueden agendar mas citas, arreglo lleno.\n";
         return;
     }
 
-    char codPaciente[10];
-    char codMedico[10];
-    char fechaHora[20];
+    string identidadPaciente, codigoMedico, fecha, hora;
+    int idxPaciente, idxMedico;
 
     cout << "\n--- AGENDAR CITA ---\n";
 
-    // Validar que el paciente exista
+    // Validar paciente por identidad (unica busqueda que expone Paciente)
     do {
-        cout << "Codigo de paciente: ";
-        cin >> codPaciente;
-        if (!existePaciente(codPaciente)) {
+        cout << "Identidad del paciente (13 digitos): ";
+        cin >> identidadPaciente;
+        idxPaciente = buscarPacienteID(listaPacientes, totalPacientes, identidadPaciente);
+        if (idxPaciente == -1) {
             cout << "Ese paciente no existe. Intente de nuevo.\n";
         }
-    } while (!existePaciente(codPaciente));
+    } while (idxPaciente == -1);
 
-    // Validar que el medico exista
+    // Validar medico por codigo
     do {
         cout << "Codigo de medico: ";
-        cin >> codMedico;
-        if (!existeMedico(codMedico)) {
+        cin >> codigoMedico;
+        idxMedico = buscarMedicoPorCodigo(listaMedicos, totalMedicos, codigoMedico);
+        if (idxMedico == -1) {
             cout << "Ese medico no existe. Intente de nuevo.\n";
         }
-    } while (!existeMedico(codMedico));
+    } while (idxMedico == -1);
 
-    // Pedir fecha/hora hasta que no choque con otra cita
+    // Pedir fecha y hora hasta que no choque con otra cita
     bool hayChoque;
-    cin.ignore();
     do {
-        cout << "Fecha y hora (dd/mm/aaaa hh:mm): ";
-        cin.getline(fechaHora, 20);
+        cout << "Fecha (dd/mm/aaaa): ";
+        cin >> fecha;
+        cout << "Hora (hh:mm): ";
+        cin >> hora;
 
-        hayChoque = validarChoqueHorario(citas, totalCitas, codMedico, fechaHora);
+        hayChoque = validarChoqueHorario(citas, totalCitas, codigoMedico, fecha, hora);
         if (hayChoque) {
             cout << "Ese medico ya tiene una cita en ese horario. Elija otro.\n";
         }
     } while (hayChoque);
 
-    // Registrar la cita nueva
-    char nuevoCodigo[10];
-    generarCodigoCita(citas, totalCitas, nuevoCodigo);
+    // Registrar la cita nueva, guardando codigo E identidad del paciente
+    string nuevoCodigo = generarCodigoCita(citas, totalCitas);
 
-    strcpy(citas[totalCitas].codigo, nuevoCodigo);
-    strcpy(citas[totalCitas].codPaciente, codPaciente);
-    strcpy(citas[totalCitas].codMedico, codMedico);
-    strcpy(citas[totalCitas].fechaHora, fechaHora);
-    strcpy(citas[totalCitas].estado, "activa");
+    citas[totalCitas].codigo = nuevoCodigo;
+    citas[totalCitas].codigoPaciente = listaPacientes[idxPaciente].codigo;
+    citas[totalCitas].identidadPaciente = listaPacientes[idxPaciente].identidad;
+    citas[totalCitas].codigoMedico = codigoMedico;
+    citas[totalCitas].fecha = fecha;
+    citas[totalCitas].hora = hora;
+    citas[totalCitas].estado = "activa";
+    citas[totalCitas].motivo = "";
 
     totalCitas++;
     guardarCitas(citas, totalCitas);
@@ -209,9 +219,9 @@ void agendarCita(Cita citas[], int &totalCitas) {
     cout << "Cita agendada con exito. Codigo asignado: " << nuevoCodigo << "\n";
 }
 
-// Marca una cita como cancelada (eliminacion logica)
+// Marca una cita como cancelada (eliminacion logica) y guarda el motivo
 void cancelarCita(Cita citas[], int totalCitas) {
-    char codigo[10];
+    string codigo;
     cout << "\n--- CANCELAR CITA ---\n";
     cout << "Codigo de cita: ";
     cin >> codigo;
@@ -222,19 +232,25 @@ void cancelarCita(Cita citas[], int totalCitas) {
         return;
     }
 
-    if (strcmp(citas[indice].estado, "cancelada") == 0) {
+    if (citas[indice].estado == "cancelada") {
         cout << "Esa cita ya estaba cancelada.\n";
         return;
     }
 
-    strcpy(citas[indice].estado, "cancelada");
+    string razon;
+    cout << "Razon de la cancelacion: ";
+    cin.ignore();
+    getline(cin, razon);
+
+    citas[indice].estado = "cancelada";
+    citas[indice].motivo = razon;
     guardarCitas(citas, totalCitas);
     cout << "Cita cancelada correctamente.\n";
 }
 
 // Cambia fecha/hora de una cita existente, validando choque
 void reprogramarCita(Cita citas[], int totalCitas) {
-    char codigo[10];
+    string codigo;
     cout << "\n--- REPROGRAMAR CITA ---\n";
     cout << "Codigo de cita: ";
     cin >> codigo;
@@ -245,28 +261,28 @@ void reprogramarCita(Cita citas[], int totalCitas) {
         return;
     }
 
-    if (strcmp(citas[indice].estado, "cancelada") == 0) {
+    if (citas[indice].estado == "cancelada") {
         cout << "No se puede reprogramar una cita cancelada.\n";
         return;
     }
 
-    char nuevaFechaHora[20];
+    string nuevaFecha, nuevaHora;
     bool valida;
-    cin.ignore();
     do {
-        cout << "Nueva fecha y hora (dd/mm/aaaa hh:mm): ";
-        cin.getline(nuevaFechaHora, 20);
+        cout << "Nueva fecha (dd/mm/aaaa): ";
+        cin >> nuevaFecha;
+        cout << "Nueva hora (hh:mm): ";
+        cin >> nuevaHora;
 
-        if (strcmp(nuevaFechaHora, citas[indice].fechaHora) == 0) {
+        if (nuevaFecha == citas[indice].fecha && nuevaHora == citas[indice].hora) {
             cout << "Debe ser distinta a la fecha/hora actual.\n";
             valida = false;
             continue;
         }
 
-        // Excluye la propia cita al validar choque
         bool choque = validarChoqueHorario(citas, totalCitas,
-                                            citas[indice].codMedico,
-                                            nuevaFechaHora,
+                                            citas[indice].codigoMedico,
+                                            nuevaFecha, nuevaHora,
                                             citas[indice].codigo);
         if (choque) {
             cout << "El medico ya tiene otra cita en ese horario.\n";
@@ -276,15 +292,18 @@ void reprogramarCita(Cita citas[], int totalCitas) {
         }
     } while (!valida);
 
-    strcpy(citas[indice].fechaHora, nuevaFechaHora);
-    strcpy(citas[indice].estado, "reprogramada");
+    citas[indice].fecha = nuevaFecha;
+    citas[indice].hora = nuevaHora;
+    citas[indice].estado = "reprogramada";
     guardarCitas(citas, totalCitas);
 
     cout << "Cita reprogramada correctamente.\n";
 }
 
 // Menu del submodulo de citas
-void submenuCitas(Cita citas[], int &totalCitas) {
+void menuCitas(Cita citas[], int &totalCitas,
+               Paciente listaPacientes[], int totalPacientes,
+               Medico listaMedicos[], int totalMedicos) {
     int opcion;
 
     do {
@@ -298,7 +317,7 @@ void submenuCitas(Cita citas[], int &totalCitas) {
 
         switch (opcion) {
             case 1:
-                agendarCita(citas, totalCitas);
+                agendarCita(citas, totalCitas, listaPacientes, totalPacientes, listaMedicos, totalMedicos);
                 break;
             case 2:
                 cancelarCita(citas, totalCitas);
