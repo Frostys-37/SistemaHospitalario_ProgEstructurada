@@ -8,26 +8,6 @@
 using namespace std;
 
 // =========================================================
-//  Extrae el siguiente campo de una linea separada por '|'
-//  y avanza "posicion" hasta despues del separador.
-//  Se usa tanto para leer especialidades como medicos, ya
-//  que ambos archivos usan el mismo formato de separadores.
-// =========================================================
-string obtenerCampo(string &linea, int &posicion) {
-    int fin = (int)linea.find('|', posicion);
-    string campo;
-    if (fin == (int)string::npos) {
-        // Ultimo campo de la linea: no hay otro '|' despues
-        campo = linea.substr(posicion);
-        posicion = (int)linea.size();
-    } else {
-        campo = linea.substr(posicion, fin - posicion);
-        posicion = fin + 1;
-    }
-    return campo;
-}
-
-// =========================================================
 //  Cargar / Guardar especialidades desde archivo a memoria o viceversa
 //  Formato de archivo: codigo|nombre
 // =========================================================
@@ -83,17 +63,17 @@ void cargarMedicos(Medico lista[], int &total) {
         if (linea.empty()) continue;
         int pos = 0;
         Medico m;
-        m.codigo          = obtenerCampo(linea, pos);
-        m.nombre          = obtenerCampo(linea, pos);
-        m.identidad       = obtenerCampo(linea, pos);
-        m.edad            = stoi(obtenerCampo(linea, pos));
-        m.genero          = obtenerCampo(linea, pos)[0]; // el campo llega como string de 1 char
-        m.celular         = obtenerCampo(linea, pos);
-        m.correo          = obtenerCampo(linea, pos);
+        m.codigo = obtenerCampo(linea, pos);
+        m.nombre = obtenerCampo(linea, pos);
+        m.identidad = obtenerCampo(linea, pos);
+        m.edad = stoi(obtenerCampo(linea, pos));
+        m.genero = obtenerCampo(linea, pos)[0]; // el campo llega como string de 1 char
+        m.celular = obtenerCampo(linea, pos);
+        m.correo = obtenerCampo(linea, pos);
         m.codEspecialidad = obtenerCampo(linea, pos);
-        m.horario         = obtenerCampo(linea, pos);
-        m.notas           = obtenerCampo(linea, pos);
-        m.activo          = (obtenerCampo(linea, pos) == "1"); // "1"/"0" en el archivo -> bool
+        m.horario = obtenerCampo(linea, pos);
+        m.notas = obtenerCampo(linea, pos);
+        m.activo = (obtenerCampo(linea, pos) == "1"); // "1"/"0" en el archivo -> bool
         lista[total] = m;
         total++;
     }

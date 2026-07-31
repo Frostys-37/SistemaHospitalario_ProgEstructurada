@@ -5,7 +5,7 @@
 #include "estructuras.h"
 using namespace std;
 
-const string ARCHIVO_PACIENTES = "data/pacientes.txt";
+const string RUTA_PACIENTES = "data/pacientes.txt";
 
 // Guardado de pacientes en archivo
 void cargarPacientes(Paciente lista[], int &total);

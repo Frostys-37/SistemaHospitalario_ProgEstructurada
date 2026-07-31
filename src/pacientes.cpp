@@ -7,20 +7,6 @@
 
 using namespace std;
 
-// Funcion que lee los campos con '|' de los txt
-string obtenerCampo(string &linea, int &posicion) {
-    int fin = (int)linea.find('|', posicion);
-    string campo;
-    if(fin == (int)string::npos) {
-        campo = linea.substr(posicion);
-        posicion = (int)linea.size();
-    } else {
-        campo = linea.substr(posicion, fin - posicion);
-        posicion = fin + 1;
-    }
-    return campo;
-}
-
 // =========================================================
 //  CARGAR PACIENTES 
 // =========================================================

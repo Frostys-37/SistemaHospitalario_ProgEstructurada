@@ -9,6 +9,10 @@ bool esSoloLetras(string texto); //Valida si el nombre contiene solo letras y es
 bool esNumerico(string texto); //Valida si la identidad contiene solo numeros
 bool validarIdentidad(string identidad); //Valida si la identidad tiene 13 digitos
 bool validarCorreo(string correo); //Valida si el correo tiene un formato valido
+bool validarFecha(string fecha);
+
+// Funcion para separar campos de archivos txt
+string obtenerCampo(string &linea, int &posicion); //Separa los campos de los archivos txt
 
 // Reintentos hasta que todos los datos sean correctos
 string leerTexto(string mensaje, bool soloLetras);

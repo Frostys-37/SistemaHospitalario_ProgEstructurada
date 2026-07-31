@@ -22,22 +22,142 @@ bool esNumerico(string texto) {
     return true;
 }
 
+// Separa un campo de una linea de texto usando '|' como delimitador
+string obtenerCampo(string &linea, int &posicion) {
+    int fin = (int)linea.find('|', posicion);
+    string campo;
+    if (fin == (int)string::npos) {
+        campo = linea.substr(posicion);
+        posicion = (int)linea.size();
+    } else {
+        campo = linea.substr(posicion, fin - posicion);
+        posicion = fin + 1;
+    }
+    return campo;
+}
+
 // Valida que el documento de identidad sea numerico y cumpla el formato exacto de 13 digitos
 bool validarIdentidad(string identidad) {
     return esNumerico(identidad) && identidad.length() == 13;
 }
 
+bool validarFecha(string fecha) {
+    if (fecha.length() != 10) {
+        return false;
+    }
+
+    if (fecha[2] != '/' || fecha[5] != '/') {
+        return false;
+    }
+
+    for (int i = 0; i < 10; i++) {
+        if (i == 2 || i == 5) {
+            continue;
+        }
+
+        if (!isdigit((unsigned char)fecha[i])) {
+            return false;
+        }
+    }
+
+    int dia =
+        (fecha[0] - '0') * 10 +
+        (fecha[1] - '0');
+
+    int mes =
+        (fecha[3] - '0') * 10 +
+        (fecha[4] - '0');
+
+    int anio =
+        (fecha[6] - '0') * 1000 +
+        (fecha[7] - '0') * 100 +
+        (fecha[8] - '0') * 10 +
+        (fecha[9] - '0');
+
+    if (anio < 1900 || anio > 2100) {
+        return false;
+    }
+
+    if (mes < 1 || mes > 12) {
+        return false;
+    }
+
+    int diasMes = 31;
+
+    if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+        diasMes = 30;
+    }
+
+    if (mes == 2) {
+        if ((anio % 400 == 0) ||
+            (anio % 4 == 0 && anio % 100 != 0)) {
+            diasMes = 29;
+        } else {
+            diasMes = 28;
+        }
+    }
+
+    if (dia < 1 || dia > diasMes) {
+        return false;
+    }
+
+    return true;
+}
+
+
 // Validacion basica de sintaxis para correo electronico (requiere '@' y un '.' posterior)
 bool validarCorreo(string correo) {
-    int posArroba = static_cast<int>(correo.find('@'));
-    if (posArroba == static_cast<int>(string::npos)) return false;
-    
-    // Busca el punto despues del simbolo '@'
-    int posPunto = static_cast<int>(correo.find('.', posArroba));
-    if (posPunto == static_cast<int>(string::npos)) return false;
-    
-    // Garantiza que haya caracteres entre el '@' y el '.' y que el '.' no sea el ultimo caracter
-    return posPunto > posArroba + 1 && posPunto < static_cast<int>(correo.size()) - 1;
+    if (correo.empty()) {
+        return false;
+    }
+
+    int arroba = -1;
+    int punto = -1;
+    int cantidadArrobas = 0;
+
+    for (int i = 0; i < (int)correo.length(); i++) {
+        if (correo[i] == '@') {
+            arroba = i;
+            cantidadArrobas++;
+        }
+    }
+
+    if (cantidadArrobas != 1) {
+        return false;
+    }
+
+    if (arroba == 0 || arroba == (int)correo.length() - 1) {
+        return false;
+    }
+
+    for (int i = arroba + 1; i < (int)correo.length(); i++) {
+        if (correo[i] == '.') {
+            punto = i;
+            break;
+        }
+    }
+
+    if (punto == -1) {
+        return false;
+    }
+
+    if (punto == arroba + 1) {
+        return false;
+    }
+
+    if (punto == (int)correo.length() - 1) {
+        return false;
+    }
+
+    if (correo[arroba + 1] == '.') {
+        return false;
+    }
+
+    if (correo[punto + 1] == '.') {
+        return false;
+    }
+
+    return true;
 }
 
 // Solicita texto por consola garantizando que no este vacio y opcionalmente restringido a solo letras
