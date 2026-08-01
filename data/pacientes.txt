@@ -1,1 +1,3 @@
 P-0001|Abel Mizraim Diaz Salazar|1503200601578|20|M|1.79|70|99273706|abel.diaz@unah.hn|-|1||0|||0||
+P-0002|Juan Salinas|1501199901085|80|M|1.68|62|12345678|juan.salinas@gmail.com|-|1||0|||0||
+P-0003|Sunem Martinez Hernandez|1502200004572|35|F|1.68|60|88642745|sunm.h@gmail.com|-|1||0|||0||

@@ -1,0 +1,4 @@
+M-0001|George Edward Foreman|1503200601578|43|M|12345678|g.foreman@gmail.com|002|Lunes a Viernes 8:00-19:00|-|1
+M-0002|Gregory House|1501199701026|67|M|99180687|g.house@gmail.com|002|Lunes a Martes 9:00-18:00|-|1
+M-0003|Carlos Maximo Galvez|1502197901549|55|M|88952647|m.galvez@gmail.com|003|Lunes a Jueves 10:00-16:00|-|1
+M-0004|Maria Dioselina Ramos Rodriguez|1505199706578|26|F|99186547|maria.rodriguez@gmail.com|001|Lunes a Sabado 8:00-16:00|-|1
