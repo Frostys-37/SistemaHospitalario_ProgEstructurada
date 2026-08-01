@@ -9,6 +9,8 @@
 
 using namespace std;
 
+// Lee el archivo de texto y carga los registros en el arreglo de consultas.
+// Utiliza '|' como delimitador para separar los campos de cada línea.
 bool cargarConsultas(Consulta consultas[], int &totalConsultas) {
     ifstream archivo(RUTA_CONSULTAS);
     totalConsultas = 0;
@@ -36,6 +38,8 @@ bool cargarConsultas(Consulta consultas[], int &totalConsultas) {
     return true;
 }
 
+// Sobrescribe el archivo de consultas con el estado actual del arreglo.
+// Formatea la salida usando '|' para mantener la compatibilidad con cargarConsultas.
 bool guardarConsultas(Consulta consultas[], int totalConsultas) {
     ofstream archivo(RUTA_CONSULTAS);
     if (!archivo.is_open()) {
@@ -54,6 +58,8 @@ bool guardarConsultas(Consulta consultas[], int totalConsultas) {
     return true;
 }
 
+// Búsqueda lineal en el arreglo de consultas.
+// Retorna el índice si lo encuentra, o -1 si no existe.
 int buscarConsultaPorCodigo(Consulta consultas[], int totalConsultas, string codigo) {
     for (int i = 0; i < totalConsultas; i++) {
         if (consultas[i].codigo == codigo) {
@@ -63,10 +69,13 @@ int buscarConsultaPorCodigo(Consulta consultas[], int totalConsultas, string cod
     return -1;
 }
 
+// Genera un nuevo código autoincremental (ej. CO-0001).
+// Extrae el número de los códigos existentes, busca el mayor y le suma 1.
 string generarCodigoConsulta(Consulta consultas[], int totalConsultas) {
     int maxNumero = 0;
 
     for (int i = 0; i < totalConsultas; i++) {
+        // Asume que el código siempre tiene el formato "CO-XXXX"
         int numero = stoi(consultas[i].codigo.substr(3));
         if (numero > maxNumero) {
             maxNumero = numero;
@@ -78,6 +87,8 @@ string generarCodigoConsulta(Consulta consultas[], int totalConsultas) {
     return oss.str();
 }
 
+// Verifica la existencia y disponibilidad de una cita antes de procesarla.
+// Se rechazan las citas que no existen o que ya están canceladas.
 bool validarCodigoCita(Cita citas[], int totalCitas, string codigoCita, int &indice) {
     indice = buscarCitaPorCodigo(citas, totalCitas, codigoCita);
     if (indice == -1) {
@@ -94,6 +105,8 @@ bool validarCodigoCita(Cita citas[], int totalCitas, string codigoCita, int &ind
     return true;
 }
 
+// Solicita datos al usuario para crear un nuevo registro de consulta médica.
+// Requiere la validación previa de la cita y guarda los cambios automáticamente en el archivo.
 void registrarConsulta(Cita citas[], int totalCitas, Consulta consultas[], int &totalConsultas) {
     if (totalConsultas >= MAX_CONSULTAS) {
         cout << "No se pueden registrar mas consultas, arreglo lleno.\n";
@@ -122,6 +135,7 @@ void registrarConsulta(Cita citas[], int totalCitas, Consulta consultas[], int &
     cout << "Ingrese el tratamiento: ";
     getline(cin, tratamiento);
 
+    // Asignación de datos al nuevo elemento del arreglo
     consultas[totalConsultas].codigo = generarCodigoConsulta(consultas, totalConsultas);
     consultas[totalConsultas].codigoCita = codigoCita;
     consultas[totalConsultas].diagnostico = diagnostico;
@@ -134,6 +148,8 @@ void registrarConsulta(Cita citas[], int totalCitas, Consulta consultas[], int &
          << consultas[totalConsultas - 1].codigo << "\n";
 }
 
+// Lee el archivo de facturas y las carga en memoria.
+// Convierte los valores de texto a float usando stof() para los campos de costos.
 bool cargarFacturas(Factura facturas[], int &totalFacturas) {
     ifstream archivo(RUTA_FACTURAS);
     totalFacturas = 0;
@@ -167,6 +183,8 @@ bool cargarFacturas(Factura facturas[], int &totalFacturas) {
     return true;
 }
 
+// Sobrescribe el archivo de facturas.
+// Fuerza el formato de punto flotante a 2 decimales para representar moneda.
 bool guardarFacturas(Factura facturas[], int totalFacturas) {
     ofstream archivo(RUTA_FACTURAS);
     if (!archivo.is_open()) {
@@ -191,6 +209,7 @@ bool guardarFacturas(Factura facturas[], int totalFacturas) {
     return true;
 }
 
+// Genera un código autoincremental para las facturas (ej. F-0001).
 string generarCodigoFactura(Factura facturas[], int totalFacturas) {
     int maxNumero = 0;
 
@@ -207,6 +226,8 @@ string generarCodigoFactura(Factura facturas[], int totalFacturas) {
     return oss.str();
 }
 
+// Captura los datos económicos de una consulta previamente vinculada a una cita.
+// Calcula el total sumando los subtotales introducidos y guarda los datos.
 void registrarFactura(Cita citas[], int totalCitas, Factura facturas[], int &totalFacturas) {
     if (totalFacturas >= MAX_FACTURAS) {
         cout << "No se pueden registrar mas facturas, arreglo lleno.\n";
@@ -218,6 +239,7 @@ void registrarFactura(Cita citas[], int totalCitas, Factura facturas[], int &tot
     float costoDiagnostico, costoTratamiento, costoConsulta;
 
     cout << "\n--- REGISTRAR FACTURA ---\n";
+    // Bucle para forzar al usuario a ingresar un código de cita válido
     do {
         cout << "Ingrese el codigo de cita: ";
         cin >> codigoCita;
@@ -246,6 +268,7 @@ void registrarFactura(Cita citas[], int totalCitas, Factura facturas[], int &tot
     cout << "Costo de la consulta: ";
     cin >> costoConsulta;
 
+    // Cálculo del costo final
     float total = costoDiagnostico + costoTratamiento + costoConsulta;
 
     cout << "\n--- RESUMEN FACTURA ---\n";
@@ -254,6 +277,7 @@ void registrarFactura(Cita citas[], int totalCitas, Factura facturas[], int &tot
     cout << "Costo consulta: " << fixed << setprecision(2) << costoConsulta << "\n";
     cout << "Costo total: " << fixed << setprecision(2) << total << "\n";
 
+    // Asignación y almacenamiento
     facturas[totalFacturas].codigo = generarCodigoFactura(facturas, totalFacturas);
     facturas[totalFacturas].codigoCita = codigoCita;
     facturas[totalFacturas].codigoPaciente = citas[indiceCita].codigoPaciente;

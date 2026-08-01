@@ -12,7 +12,6 @@ using namespace std;
 
 // =========================================================
 //  MAIN.CPP - Menu principal del Sistema de Gestion Hospitalaria
-//  Se ejecuta SIEMPRE desde la raiz del proyecto (via "make run").
 // =========================================================
 
 int main() {
