@@ -3,9 +3,8 @@
 
 #include <string>
 #include "estructuras.h"
+#include "config.h"
 using namespace std;
-
-const string RUTA_PACIENTES = "data/pacientes.txt";
 
 // Guardado de pacientes en archivo
 void cargarPacientes(Paciente lista[], int &total);

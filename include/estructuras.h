@@ -39,7 +39,7 @@ struct Paciente {
     string razonBaja;     // motivo si activo == false
 };
 
-// ---- Especialidad (catalogo, la maneja el modulo de Medico) ----
+// ---- Especialidad (catalogo) ----
 struct Especialidad {
     string codigo;   // 3 digitos, ej "010"
     string nombre;
