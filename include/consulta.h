@@ -28,8 +28,6 @@ void registrarFactura(Cita citas[], int totalCitas, Consulta consultas[], int to
                       Paciente listaPacientes[], int totalPacientes,
                       Medico listaMedicos[], int totalMedicos);
 void menuConsultas(Cita citas[], int totalCitas, Consulta consultas[], int &totalConsultas,
-                   Factura facturas[], int &totalFacturas,
-                   Paciente listaPacientes[], int totalPacientes,
-                   Medico listaMedicos[], int totalMedicos);
+                   Factura facturas[], int &totalFacturas);
 
 #endif

@@ -8,7 +8,6 @@ build/
 # IMPORTANTE: si cada quien registra sus propios pacientes/citas de prueba
 # NO deben subirse al repo
 # Se sube solo un set de datos de prueba acordado en equipo
-data/*.txt
 !data/.gitkeep
  
 # Carpetas de IDEs
@@ -18,5 +17,4 @@ data/*.txt
  
 # Archivos temporales de SO
 .DS_Store
-main.cpp
 Thumbs.db

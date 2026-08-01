@@ -170,7 +170,7 @@ bool cargarFacturas(Factura facturas[], int &totalFacturas) {
 bool guardarFacturas(Factura facturas[], int totalFacturas) {
     ofstream archivo(RUTA_FACTURAS);
     if (!archivo.is_open()) {
-        cout << "Error: no se pudo abrir " << RUTA_FACTURAS << " para escribir.\n";
+        cout << "No se pudo abrir " << RUTA_FACTURAS << " para escribir.\n";
         return false;
     }
 

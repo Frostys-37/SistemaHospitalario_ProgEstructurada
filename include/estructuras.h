@@ -12,6 +12,12 @@ const int MAX_CITAS          = 500;
 const int MAX_CONSULTAS      = 500;
 const int MAX_FACTURAS       = 500;
 
+//Usuarios (Login)
+struct Usuario {
+    string codigo;
+    string contrasena;
+};
+
 // ---- Tutor legal (solo aplica si el paciente es menor de 18) ----
 struct Tutor {
     string nombre;

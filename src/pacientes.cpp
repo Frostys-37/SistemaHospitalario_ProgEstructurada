@@ -9,6 +9,7 @@ using namespace std;
 
 // =========================================================
 //  CARGAR PACIENTES 
+// Se llama una sola vez al iniciar el programa
 // =========================================================
 void cargarPacientes(Paciente lista[], int &total) {
     total = 0;

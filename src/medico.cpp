@@ -12,8 +12,7 @@ using namespace std;
 //  Formato de archivo: codigo|nombre
 // =========================================================
 
-// Se llama una sola vez al iniciar el programa (no en cada busqueda),
-// asi el arreglo en memoria queda listo para todo el resto de la ejecucion.
+// Se llama una sola vez al iniciar el programa,
 void cargarEspecialidades(Especialidad lista[], int &total) {
     total = 0;
     ifstream archivo(RUTA_ESPECIALIDADES);
@@ -33,8 +32,7 @@ void cargarEspecialidades(Especialidad lista[], int &total) {
 }
 
 // Reescribe el archivo completo con lo que haya en memoria.
-// Se llama al salir del sub-menu (opcion 0), nunca en cada registro,
-// para no abrir/cerrar el archivo de mas.
+// Se llama al salir del sub-menu (opcion 0), nunca en cada registro
 void guardarEspecialidades(Especialidad lista[], int total) {
     ofstream archivo(RUTA_ESPECIALIDADES);
     if (!archivo.is_open()) {
@@ -108,7 +106,7 @@ int buscarMedicoXCodigo(Medico lista[], int total, string codigo) {
     return -1;
 }
 
-int buscarEspecialidadPorCodigo(Especialidad lista[], int total, string codigo) {
+int buscarEspecialidadXCodigo(Especialidad lista[], int total, string codigo) {
     for (int i = 0; i < total; i++) {
         if (lista[i].codigo == codigo) return i;
     }
@@ -180,7 +178,7 @@ void registrarEspecialidad(Especialidad lista[], int &total) {
         getline(cin, codigo);
         if (codigo.size() != 3 || !esNumerico(codigo)) {
             cout << "  >> Debe ser un codigo numerico de exactamente 3 digitos.\n";
-        } else if (buscarEspecialidadPorCodigo(lista, total, codigo) != -1) {
+        } else if (buscarEspecialidadXCodigo(lista, total, codigo) != -1) {
             cout << "  >> Ya existe una especialidad con ese codigo.\n";
         } else {
             valido = true;
@@ -234,7 +232,7 @@ void registrarMedico(Medico lista[], int &total, Especialidad especialidades[], 
         listarEspecialidades(especialidades, totalEspecialidades);
         cout << "Codigo de especialidad: ";
         getline(cin, codEsp);
-        if (buscarEspecialidadPorCodigo(especialidades, totalEspecialidades, codEsp) == -1) {
+        if (buscarEspecialidadXCodigo(especialidades, totalEspecialidades, codEsp) == -1) {
             cout << "  >> Esa especialidad no existe. Registrela primero o asegurese que sea el codigo correcto.\n";
         } else {
             valido = true;
