@@ -85,6 +85,13 @@ struct Consulta {
 struct Factura {
     string codigo;          // "F-C0001"
     string codigoCita;      // FK -> Cita.codigo
+    string codigoPaciente;  // FK -> Paciente.codigo
+    string identidadPaciente;
+    string diagnostico;
+    string tratamiento;
+    float  costoDiagnostico;
+    float  costoTratamiento;
+    float  costoConsulta;
     float  total;
 };
 
