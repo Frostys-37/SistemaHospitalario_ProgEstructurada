@@ -101,7 +101,7 @@ void guardarMedicos(Medico lista[], int total) {
 //  Ambas devuelven el indice en el arreglo, o -1 si no existe.
 // =========================================================
 
-int buscarMedicoPorCodigo(Medico lista[], int total, string codigo) {
+int buscarMedicoXCodigo(Medico lista[], int total, string codigo) {
     for (int i = 0; i < total; i++) {
         if (lista[i].codigo == codigo) return i;
     }
@@ -265,7 +265,7 @@ void verHorarioDisponible(Medico lista[], int total) {
     string codigo;
     cout << "Codigo del medico: ";
     getline(cin, codigo);
-    int idx = buscarMedicoPorCodigo(lista, total, codigo);
+    int idx = buscarMedicoXCodigo(lista, total, codigo);
     if (idx == -1) {
         cout << "No se encontro ningun medico con ese codigo.\n";
         return;

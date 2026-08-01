@@ -18,4 +18,5 @@ data/*.txt
  
 # Archivos temporales de SO
 .DS_Store
+main.cpp
 Thumbs.db
